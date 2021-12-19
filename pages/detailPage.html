@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../style//detailPage.css">
+    <link rel="stylesheet" href="../style/surveyDetails.css">
+    <link rel="stylesheet" href="../style/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="../proxies/covidSurvey.js"></script>
+    <script src="../detailPage.js"></script>
+    <script src="../services/renderHtml.js"></script>
+    <script src="../services/surveyDeatils.js"></script>
+</head>
+
+<body>
+
+    <div class="covid-tracker container">
+
+        <header class="header-section">
+            <h1 class="text-center">COVID Tracker-India</h1>
+        </header>
+
+        <div class="top-nav-section">
+            <div id="state_name"></div>
+            <input type="date" placeholder="search" class="input-box" id="detailed_date_box" />
+            <select id="detail_district" class="input-box">
+                <option value="">Select a District</option>
+            </select>
+            <div>
+                <select id="detail_sort_value">
+                    <option>Select Sort Value</option>
+                    <option value="confirmed">Confirmed count </option>
+                    <option value="deceased">Affected Percentage</option>
+                    <option value="vaccinated1">Vaccinated1 percentage</option>
+                    <option value="vaccinated2">Vaccinated2 percentage</option>
+                </select>
+                <select id="detail_sort_type">
+                    <option>Select Sort Type</option>
+                    <option>Ascending</option>
+                    <option>Descending</option>
+                </select>
+                <input type="button" value="Sort By" class="input-box" id="detailed_sort_by">
+            </div>
+        </div>
+
+        <div class="contect-section">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="employee-sno">Date</th>
+                        <th class="employee-id">Confirmed</th>
+                        <th class="employee-name">Recovered</th>
+                        <th class="employee-email">Deceased</th>
+                        <th class="employee-email">Delta</th>
+                        <th class="employee-email">Delta7</th>
+                    </tr>
+                </thead>
+                <tbody id="detailed_table_body" class="" statee="test">
+                </tbody>
+            </table>
+            <div id="render_no_data" class="render-survey-details flex align-item-center flex-wrap justify-center render-message">
+
+            </div>
+        </div>
+
+        <div class="render-survey-details flex align-item-center flex-wrap justify-center" id="detailed_render_survey_details">
+        </div>
+    </div>
+</body>
+
+</html>

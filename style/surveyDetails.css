@@ -1,0 +1,60 @@
+.state-details-container {
+    min-width: 400px;
+    margin: 20px;
+    background-color: #fefefe;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 4px rgb(0 0 0 /3%);
+    cursor: pointer;
+}
+
+.state-details-container:hover {
+    box-shadow: 0 0 10px 4px rgb(0 0 0 /5%);
+    transition: all 0.2s ease-in-out;
+    border-left: 10px solid #4e67eb;
+}
+
+.state-container {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+
+
+/* 
+.slider-container {
+    width: 100vw;
+    margin: 0 auto;
+    height: 90vh;
+    max-width: 80rem;
+    position: relative;
+    border-radius: 0.5rem;
+    overflow: hidden;
+} 
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    transition: all 0.25s ease-in-out;
+    text-align: center;
+}  */
+
+.prevBtn,
+.nextBtn {
+    background-color: #0e0e0e;
+    color: whitesmoke;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 0 0.25rem;
+    text-transform: capitalize;
+    letter-spacing: 2px;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.75rem;
+}

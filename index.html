@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="./style/pagination.css">
+    <link rel="stylesheet" href="./style/surveyDetails.css">
+    <link rel="stylesheet" href="./style/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="covid-tracker container">
+        <header class="header-section">
+            <h1 class="text-center">COVID Tracker-India</h1>
+        </header>
+        <div class="top-nav-section">
+            <div>
+                <span>States</span>
+                <input type="search" class="input-box " id="search_box" placeholder="search a states" />
+            </div>
+
+            <input type="date" placeholder="search" class="input-box" id="date_box" />
+            <div>
+                <select id="sort_value">
+                    <option>Select Sort Value</option>
+                    <option value="confirmed">Confirmed count </option>
+                    <option value="deceased">Affected Percentage</option>
+                    <option value="vaccinated1">Vaccinated1 percentage</option>
+                    <option value="vaccinated2">Vaccinated2 percentage</option>
+                </select>
+                <select id="sort_type">
+                    <option>Select Sort Type</option>
+                    <option>Ascending</option>
+                    <option>Descending</option>
+                </select>
+                <input type="button" value="Sort By" class="input-box" id="sort_by">
+            </div>
+        </div>
+        <div class="render-survey-details flex align-item-center flex-wrap justify-center" id="render_survey_details">
+        </div>
+        <footer class="footer-section" id="footer_section">
+            <div class="pagination" id="pagination"></div>
+        </footer>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="./proxies/covidSurvey.js"></script>
+    <script src="./services/surveyDeatils.js"></script>
+    <script src="./services/renderHtml.js"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>
