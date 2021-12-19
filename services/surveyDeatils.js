@@ -150,6 +150,7 @@ searchByDistrict = (element, state) => {
     })
 }
 
+
 searchByDate = (element, type) => {
     $(element).change(function() {
         let date = dateFormat(this.value);
