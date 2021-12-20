@@ -39,8 +39,6 @@ buildSurveyDetailsPlaceholder = (object) => {
                         <div class="rows" id=${key}></div>
                         <div class="btn-container">
                         <a href="./pages/detailPage.html" target="_blank" class="detail-page">Details</a>
-                            <button type="button" class="prevBtn">Previous</button>
-                            <button type="button" class="nextBtn" >Next</button>
                         </div>
                     </div>`
         $(defaultHtmlElemnts.renderSurveyDetails).append(display);
@@ -56,18 +54,21 @@ renderStateAndDistrictDetails = (element) => {
         const totalSurveyDeatils = generateSurvayValues(totalSurveyValues);
         const deltaSurveyDeatils = generateSurvayValues(deltaSurveyValues);
         const delta7SurveyDeatils = generateSurvayValues(delta7SurveyValues);
-        let display = `<div class="slider-container">
-                            ${renderSurveyHtml("Total", totalSurveyDeatils)}
-                            ${renderSurveyHtml("Delta", deltaSurveyDeatils)}
-                            ${renderSurveyHtml("Delta7", delta7SurveyDeatils)}
-                        </div>`;
+        let display = `<div class="slideshow-container">
+                            ${renderSurveyHtml(key,"Total", totalSurveyDeatils)}
+                            ${renderSurveyHtml(key,"Delta", deltaSurveyDeatils)}
+                            ${renderSurveyHtml(key,"Delta7", delta7SurveyDeatils)}
+                            <a class="next" state="state-${key}">&#10095;</a>
+                        </div><br>`;
         $(`#${key}`).append(display);
+        $(`#varient-Delta-${key}`).hide();
+        $(`#varient-Delta7-${key}`).hide();
     }
 }
 
-renderSurveyHtml = (heading, object) => {
+renderSurveyHtml = (state, heading, object) => {
     let html = ` <div class="slide">
-                    <div class="state-container">
+                    <div class="state-container"id="varient-${heading}-${state}" state="${state}">
                         <div>
                             <h3 class="text-center">${heading}</h3>
                         </div>
@@ -80,7 +81,7 @@ renderSurveyHtml = (heading, object) => {
                             </div>
                             <div class="flex align-items-center justify-between">
                                 <p>Deceased </p> <p> ${object.deceased} </p>
-                            </div>
+                             </div>
                             <div class="flex align-items-center justify-between">
                                 <p>Tested </p> <p> ${object.tested} </p>
                             </div>
@@ -126,6 +127,7 @@ renderNoData = () => {
 }
 
 makeDetailedPageObject = (object) => {
+    console.log("object----------->", object);
     let detailedPageObject = prepareDetailedObject(object);
     if (detailedPageObject.status) {
         let display = `<tr>

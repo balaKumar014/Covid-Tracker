@@ -4,6 +4,7 @@ let surveyDetailObject = "";
 let timeEntryDetailObject = "";
 let currentStateName = "";
 let timeEntriesDetailArray = [];
+let sortedDateArray = [];
 
 handleSurveyDetails = async(surveyUrl, timeEntriesurl) => {
     let surveyDeatils = await getSurveyDetails(surveyUrl);
@@ -17,6 +18,7 @@ handleSurveyDetails = async(surveyUrl, timeEntriesurl) => {
     searchByDate(defaultHtmlElemnts.dateBoxDetail, "surveyDetail");
     sortingSurveyDetails();
     renderStateDetails();
+    nextSlides();
     return;
 }
 
@@ -111,7 +113,7 @@ initiateDetailRender = (currentStateName) => {
     for (const key in timeEntries) {
         let prepareObject = {}
         prepareObject[key] = timeEntries[key];
-        makeDetailedPageObject(prepareObject);
+        makeDetailedPageObject(prepareObject, "");
     }
     return;
 }
@@ -149,7 +151,6 @@ searchByDistrict = (element, state) => {
         }
     })
 }
-
 
 searchByDate = (element, type) => {
     $(element).change(function() {
@@ -195,6 +196,7 @@ dateFormat = (date) => {
     let formatDate = date.split("-");
     return formatDate[0] + "-" + formatDate[1] + "-" + formatDate[2];
 }
+
 generateSurvayValues = (object) => {
     let detailObject = {
         confirmed: object.confirmed ? object.confirmed : 0,
@@ -219,12 +221,12 @@ sortingSurveyDetails = () => {
     })
 }
 
-arraySortingBasedOnType = (sortType) => {
+arraySortingBasedOnType = (sortType, array) => {
     let detail = "";
     if (sortType == "Ascending") {
-        detail = sortedSurveyDetailArray
+        detail = array;
     } else if (sortType == "Descending") {
-        detail = sortedSurveyDetailArray.reverse();
+        detail = array.reverse();
     }
     return detail;
 }
@@ -248,7 +250,24 @@ timeEntriesDetailArraySorting = (value) => {
         }
         timeEntriesDetailArray.push(object);
     }
-    surveyDetailArraySorting(timeEntriesDetailArray, value);
+    sortDateArray(timeEntriesDetailArray, value);
+}
+
+timeEntriesObjectForm = (array) => {
+    let staeName = localStorage.getItem("stateName");
+    $(defaultHtmlElemnts.detailedTableBody).empty();
+    $(defaultHtmlElemnts.detailedPageNoData).empty();
+    $('table tr:eq(0) th:eq(0)').text("Date");
+    for (let index = 0; index < array.length; index++) {
+        const element = array[index];
+        for (const key in element) {
+            let timeEntryObject = timeEntryDetailObject[staeName].dates[key];
+            let object = {
+                [key]: timeEntryObject
+            }
+            makeDetailedPageObject(object);
+        }
+    }
 }
 
 sortingTimeEntriesDetails = () => {
@@ -257,9 +276,50 @@ sortingTimeEntriesDetails = () => {
         const sortValue = $(defaultHtmlElemnts.detailSortValue).val();
         if (sortType !== "Select Sort Type" && sortValue !== "Select Sort Value") {
             timeEntriesDetailArraySorting(sortValue);
+            let sortedArray = arraySortingBasedOnType(sortType, sortedDateArray);
+            timeEntriesObjectForm(sortedArray);
             return
-            let sortedArray = arraySortingBasedOnType(sortType, sortedSurveyDetailArray);
-            console.log("sortedArraysortedArray------------>", sortedArray);
         }
     })
+}
+
+nextSlides = (thisId) => {
+    // let varient = $(".state-container").attr("state");
+    $(".next").click(function() {
+        let attribute = $(this).attr("state")
+        console.log("attribute---------->", attribute);
+        let idSplit = attribute.split("-");
+        let totalVisible = $(`#varient-Total-${idSplit[1]}`).is(':visible');
+        let deltaVisible = $(`#varient-Delta-${idSplit[1]}`).is(':visible');
+        let delta7Visible = $(`#varient-Delta7-${idSplit[1]}`).is(':visible');
+        console.log("totalVisible----------->", totalVisible);
+        console.log("deltaVisible----------->", deltaVisible);
+        console.log("delta7Visible----------->", delta7Visible);
+        if (totalVisible) {
+            $(`#varient-Delta-${idSplit[1]}`).show();
+            $(`#varient-Total-${idSplit[1]}`).hide();
+            $(`#varient-Delta7-${idSplit[1]}`).hide();
+        } else if (deltaVisible) {
+            $(`#varient-Delta7-${idSplit[1]}`).show();
+            $(`#varient-Total-${idSplit[1]}`).hide();
+            $(`#varient-Delta-${idSplit[1]}`).hide();
+        } else if (delta7Visible) {
+            $(`#varient-Total-${idSplit[1]}`).show();
+            $(`#varient-Delta7-${idSplit[1]}`).hide();
+            $(`#varient-Delta-${idSplit[1]}`).hide();
+        }
+    });
+
+}
+
+sortDateArray = (array, value) => {
+    sortedDateArray = [];
+    console.log(array.length);
+    array.forEach(function(elem, idx, arr) {
+        let firstKey = Object.keys(elem).find(keys => keys);
+        let object = {
+            [firstKey]: elem[firstKey].total[value] ? elem[firstKey].total[value] : 0
+        }
+        sortedDateArray.push(object);
+    });
 }
