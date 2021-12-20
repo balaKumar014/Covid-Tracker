@@ -4,9 +4,6 @@
     <link rel="stylesheet" href="./style/pagination.css">
     <link rel="stylesheet" href="./style/surveyDetails.css">
     <link rel="stylesheet" href="./style/main.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -34,12 +31,13 @@
                     <option>Ascending</option>
                     <option>Descending</option>
                 </select>
-                <input type="button" value="Sort By" class="input-box" id="sort_by">
+                <!-- <input type="button" value="" class="input-box" > -->
+                <button id="sort_by">Sort By</button>
             </div>
         </div>
         <div class="render-survey-details flex align-item-center flex-wrap justify-center" id="render_survey_details">
         </div>
-        <footer class="footer-section" id="footer_section">
+        <footer class="footer-section flex justify-center" id="footer_section">
             <div class="pagination" id="pagination"></div>
         </footer>
     </div>

@@ -5,13 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Detail Page</title>
     <link rel="stylesheet" href="../style//detailPage.css">
     <link rel="stylesheet" href="../style/surveyDetails.css">
     <link rel="stylesheet" href="../style/main.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="../proxies/covidSurvey.js"></script>
     <script src="../detailPage.js"></script>
@@ -28,10 +25,10 @@
         </header>
 
         <div class="top-nav-section">
-            <div id="state_name"></div>
+            <div id="state_name" class="state_name"></div>
             <input type="date" placeholder="search" class="input-box" id="detailed_date_box" />
             <select id="detail_district" class="input-box">
-                <option value="">Select a District</option>
+                <option value="Select a District">Select a District</option>
             </select>
             <div>
                 <select id="detail_sort_value">
@@ -46,7 +43,8 @@
                     <option>Ascending</option>
                     <option>Descending</option>
                 </select>
-                <input type="button" value="Sort By" class="input-box" id="detailed_sort_by">
+                <button id="detailed_sort_by">Sort By</button>
+                <!-- <input type="button" value="Sort By" class="input-box" > -->
             </div>
         </div>
 

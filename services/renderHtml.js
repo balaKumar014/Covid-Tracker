@@ -29,18 +29,19 @@ buildSurveyDetailsPlaceholder = (object) => {
     for (const key in object) {
         const districtptions = generateOptions(object[key].districts);
         let display = `<div class="state-details-container" state="${key}">
-                        <div class="flex align-item-center justify-between">
-                            <h2>${key}</h2>
-                            <select class="input-box district-search-input" placeholder="search a district">
-                                <option>Search a district</option>
+            <div class="flex align-item-center justify-between">
+                <h2>${key}</h2>
+                <select class="input-box district-search-input" placeholder="Select a District">
+                    <option>Select a District</option>
                                 ${districtptions}
-                            </select>
-                        </div>
-                        <div class="rows" id=${key}></div>
-                        <div class="btn-container">
-                        <a href="./pages/detailPage.html" target="_blank" class="detail-page">Details</a>
-                        </div>
-                    </div>`
+                </select>
+            </div>
+            <div class="rows" id=${key}></div> 
+            <div class="btn-container">
+                <a href="./pages/detailPage.html" target="_blank" class="detail-page"><button>
+                Details</button></a>
+            </div>
+        </div>`
         $(defaultHtmlElemnts.renderSurveyDetails).append(display);
     }
 }
@@ -55,9 +56,9 @@ renderStateAndDistrictDetails = (element) => {
         const deltaSurveyDeatils = generateSurvayValues(deltaSurveyValues);
         const delta7SurveyDeatils = generateSurvayValues(delta7SurveyValues);
         let display = `<div class="slideshow-container">
-                            ${renderSurveyHtml(key,"Total", totalSurveyDeatils)}
-                            ${renderSurveyHtml(key,"Delta", deltaSurveyDeatils)}
-                            ${renderSurveyHtml(key,"Delta7", delta7SurveyDeatils)}
+                            ${renderSurveyHtml(key, "Total", totalSurveyDeatils)}
+                            ${renderSurveyHtml(key, "Delta", deltaSurveyDeatils)}
+                            ${renderSurveyHtml(key, "Delta7", delta7SurveyDeatils)}
                             <a class="next" state="state-${key}">&#10095;</a>
                         </div><br>`;
         $(`#${key}`).append(display);
@@ -127,7 +128,6 @@ renderNoData = () => {
 }
 
 makeDetailedPageObject = (object) => {
-    console.log("object----------->", object);
     let detailedPageObject = prepareDetailedObject(object);
     if (detailedPageObject.status) {
         let display = `<tr>
@@ -136,14 +136,14 @@ makeDetailedPageObject = (object) => {
                     <td>${detailedPageObject.total.recovered}</td>
                     <td>${detailedPageObject.total.deceased}</td>
                     <td>
-                        confirmed:${detailedPageObject.delta.confirmed}
-                        recovered:${detailedPageObject.delta.recovered}
-                        deceased:${detailedPageObject.delta.deceased}
+                        Confirmed:${detailedPageObject.delta.confirmed}<br/>
+                        Recovered:${detailedPageObject.delta.recovered}<br/>
+                        Deceased:${detailedPageObject.delta.deceased}
                     </td>
                     <td>
-                        confirmed:${detailedPageObject.delta7.confirmed}
-                        recovered:${detailedPageObject.delta7.recovered}
-                        deceased:${detailedPageObject.delta7.deceased}
+                        Confirmed:${detailedPageObject.delta7.confirmed}<br/>
+                        Recovered:${detailedPageObject.delta7.recovered}<br/>
+                        Deceased:${detailedPageObject.delta7.deceased}
                     </td>
                 </tr>`;
         $(defaultHtmlElemnts.detailedTableBody).append(display);

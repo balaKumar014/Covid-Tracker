@@ -2,11 +2,11 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    font-family: sans-serif;
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: sans-serif;
 }
 
 header {
@@ -57,6 +57,17 @@ select {
     display: flex;
     justify-content: space-around;
     align-items: center;
+}
+
+button {
+    padding: 6px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #4e67eb;
+    border-radius: 5px;
+    outline: none;
+    background-color: #4e67eb;
+    color: #fefefe;
 }
 
 .mlr-30 {

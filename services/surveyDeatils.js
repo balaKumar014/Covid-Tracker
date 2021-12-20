@@ -8,7 +8,8 @@ let sortedDateArray = [];
 
 handleSurveyDetails = async(surveyUrl, timeEntriesurl) => {
     let surveyDeatils = await getSurveyDetails(surveyUrl);
-    let surveyDetailsArray = constructArray(surveyDeatils, );
+    let surveyDetailsArray = constructArray(surveyDeatils);
+    $(this).addClass("active-page");
     await getTimeEntriesDetails(timeEntriesurl);
     renderSurveyDetails(0, 10, surveyDetailsArray);
     assignPagination(surveyDetailsArray);
@@ -20,33 +21,33 @@ handleSurveyDetails = async(surveyUrl, timeEntriesurl) => {
     renderStateDetails();
     nextSlides();
     return;
-}
+};
 
 getSurveyDetails = async(url) => {
     const surveyData = await getData(url);
     const surveyJsonData = await surveyData.json();
     surveyDetailObject = surveyJsonData;
     return surveyJsonData;
-}
+};
 
 getTimeEntriesDetails = async(url) => {
     const timeEntryData = await getData(url);
     const timeEntryJsonData = await timeEntryData.json();
     timeEntryDetailObject = timeEntryJsonData;
     return timeEntryJsonData;
-}
+};
 
 constructArray = (details) => {
     const array = [];
     for (const key in details) {
         let object = {
-            [key]: details[key]
+            [key]: details[key],
         };
         array.push(object);
     }
     surveyDetailArray = array;
     return array;
-}
+};
 
 renderSurveyDetails = (requiredIndex, requiredLength, array) => {
     $(defaultHtmlElemnts.renderSurveyDetails).empty();
@@ -58,38 +59,50 @@ renderSurveyDetails = (requiredIndex, requiredLength, array) => {
         searchByDate(defaultHtmlElemnts.dateBoxDetail, "surveyDetail");
         renderStateDetails();
     }
-    return
-}
+    return;
+};
 
 renderPaginatedValues = () => {
     $(`${defaultHtmlElemnts.paginatedButtons}`).click(function() {
+        console.log("clicked");
+
+        $(defaultHtmlElemnts.paginatedButtons).removeClass("active-page");
+        // $(this).closest(".active-page").attr(class);
+        $(this).addClass("active-page");
         const paginationValue = $(this).attr("value") + "0";
         const requiredIndex = paginationValue - 10;
         renderSurveyDetails(requiredIndex, paginationValue, surveyDetailArray);
+        nextSlides();
     });
     return;
-}
+};
 
 searchByStateName = () => {
     $(`${defaultHtmlElemnts.searchBoxDetail}`).change(function() {
-        let objectLength = Object.keys(surveyDetailObject).length
-        for (const [index, [key, value]] of Object.entries(Object.entries(surveyDetailObject))) {
-            if (key == this.value) {
+        let objectLength = Object.keys(surveyDetailObject).length;
+        let currentValue = this.value;
+        currentValue = currentValue.toUpperCase();
+        console.log("currentValue0-------------->", currentValue);
+        for (const [index, [key, value]] of Object.entries(
+                Object.entries(surveyDetailObject)
+            )) {
+            if (key == currentValue) {
                 let object = {
-                    [key]: value
-                }
+                    [key]: value,
+                };
                 $(defaultHtmlElemnts.renderSurveyDetails).empty();
                 $(defaultHtmlElemnts.renderPaginationDetails).empty();
                 buildSurveyDetailsPlaceholder(object);
                 renderStateAndDistrictDetails(object);
+                nextSlides();
                 return;
             } else {
                 if (parseInt(index) + 1 == objectLength) {
-                    if (!this.value) {
+                    if (!currentValue) {
                         renderSurveyDetails(0, 10, surveyDetailArray);
                         assignPagination(surveyDetailArray);
                         renderPaginatedValues();
-                        return
+                        return;
                     } else {
                         return renderNoData();
                     }
@@ -97,60 +110,67 @@ searchByStateName = () => {
             }
         }
     });
-}
+};
 
 renderStateDetails = () => {
     $(defaultHtmlElemnts.detailPage).click(function() {
-        let stateName = $(this).closest('div.state-details-container').attr('state');
+        let stateName = $(this)
+            .closest("div.state-details-container")
+            .attr("state");
         localStorage.setItem("stateName", stateName);
-        return
+        return;
     });
-}
+};
 
 initiateDetailRender = (currentStateName) => {
     let timeEntries = timeEntryDetailObject[currentStateName].dates;
+    $("#state_name").empty();
     $("#state_name").append(`<span >${currentStateName}</span>`);
     for (const key in timeEntries) {
-        let prepareObject = {}
+        console.log("key---------->", key);
+        let prepareObject = {};
         prepareObject[key] = timeEntries[key];
         makeDetailedPageObject(prepareObject, "");
     }
     return;
-}
+};
 
 searchByDistrict = (element, state) => {
     $(element).change(function() {
         if (!state) {
-            let response = ""
-            let stateName = $(this).closest('div.state-details-container').attr('state');
-            if (this.value != "Search a district") {
+            let response = "";
+            let stateName = $(this).closest("div.state-details-container").attr("state");
+            if (this.value != "Select a District") {
                 response = surveyDetailObject[stateName].districts[this.value];
             } else {
                 response = surveyDetailObject[stateName];
             }
             let object = {
-                [stateName]: response
-            }
+                [stateName]: response,
+            };
             renderStateAndDistrictDetails(object);
+            nextSlides();
         } else {
-            let response = ""
+            let response = "";
             let stateName = state;
-            if (this.value != "Search a district") {
+            if (this.value != "Select a District") {
                 response = surveyDetailObject[stateName].districts[this.value];
                 let object = {
-                    [this.value]: response
-                }
+                    [this.value]: response,
+                };
                 $("table").show();
                 $(defaultHtmlElemnts.detailedTableBody).empty();
                 $(defaultHtmlElemnts.detailedPageNoData).empty();
-                $('table tr:eq(0) th:eq(0)').text("District");
+                $("table tr:eq(0) th:eq(0)").text("District");
                 makeDetailedPageObject(object);
             } else {
-                initiateDetailRender(staeName);
+                $("table tr:eq(0) th:eq(0)").text("Date");
+                $(defaultHtmlElemnts.detailedTableBody).empty();
+                initiateDetailRender(stateName);
             }
         }
-    })
-}
+    });
+};
 
 searchByDate = (element, type) => {
     $(element).change(function() {
@@ -160,16 +180,16 @@ searchByDate = (element, type) => {
                 for (const key in timeEntryDetailObject) {
                     let value = timeEntryDetailObject[key].dates[date];
                     let object = {
-                        [key]: value ? value : {}
-                    }
-                    console.log("object-------->", object);
+                        [key]: value ? value : {},
+                    };
                     renderStateAndDistrictDetails(object);
                 }
             } else {
                 renderSurveyDetails(0, 10, surveyDetailArray);
                 assignPagination(surveyDetailArray);
                 renderPaginatedValues();
-                return
+                nextSlides();
+                return;
             }
         }
         if (type == "fullDetail") {
@@ -177,26 +197,26 @@ searchByDate = (element, type) => {
             if (date != "-undefined-undefined") {
                 let value = timeEntryDetailObject[staeName].dates[date];
                 let object = {
-                    [date]: value ? value : {}
+                    [date]: value ? value : {},
                 };
                 $("table").show();
                 $(defaultHtmlElemnts.detailedTableBody).empty();
                 $(defaultHtmlElemnts.detailedPageNoData).empty();
-                $('table tr:eq(0) th:eq(0)').text("Date");
+                $("table tr:eq(0) th:eq(0)").text("Date");
                 makeDetailedPageObject(object);
             } else {
+                $(defaultHtmlElemnts.detailedTableBody).empty();
                 initiateDetailRender(staeName);
             }
         }
-        return
+        return;
     });
-}
+};
 
 dateFormat = (date) => {
     let formatDate = date.split("-");
     return formatDate[0] + "-" + formatDate[1] + "-" + formatDate[2];
-}
-
+};
 
 generateSurvayValues = (object) => {
     let detailObject = {
@@ -205,10 +225,10 @@ generateSurvayValues = (object) => {
         deceased: object.deceased ? object.deceased : 0,
         tested: object.tested ? object.tested : 0,
         vaccinated1: object.vaccinated1 ? object.vaccinated1 : 0,
-        vaccinated2: object.vaccinated2 ? object.vaccinated2 : 0
-    }
+        vaccinated2: object.vaccinated2 ? object.vaccinated2 : 0,
+    };
     return detailObject;
-}
+};
 
 sortingSurveyDetails = () => {
     $(defaultHtmlElemnts.sortBy).click(function() {
@@ -216,11 +236,15 @@ sortingSurveyDetails = () => {
         const sortValue = $(defaultHtmlElemnts.sortValue).val();
         if (sortType !== "Select Sort Type" && sortValue !== "Select Sort Value") {
             surveyDetailArraySorting(surveyDetailArray, sortValue);
-            let sortedArray = arraySortingBasedOnType(sortType, sortedSurveyDetailArray);
+            let sortedArray = arraySortingBasedOnType(
+                sortType,
+                sortedSurveyDetailArray
+            );
             renderSurveyDetails(0, 9, sortedArray);
+            nextSlides();
         }
-    })
-}
+    });
+};
 
 arraySortingBasedOnType = (sortType, array) => {
     let detail = "";
@@ -230,16 +254,16 @@ arraySortingBasedOnType = (sortType, array) => {
         detail = array.reverse();
     }
     return detail;
-}
+};
 
 surveyDetailArraySorting = (array, key) => {
     sortedSurveyDetailArray = array;
     sortedSurveyDetailArray.sort(function(a, b) {
-        let firstKey = Object.keys(a).find(keys => keys);
-        let secondKey = Object.keys(b).find(keys => keys);
+        let firstKey = Object.keys(a).find((keys) => keys);
+        let secondKey = Object.keys(b).find((keys) => keys);
         return a[firstKey].total[key] - b[secondKey].total[key];
     });
-}
+};
 
 timeEntriesDetailArraySorting = (value) => {
     let staeName = localStorage.getItem("stateName");
@@ -247,29 +271,29 @@ timeEntriesDetailArraySorting = (value) => {
     timeEntriesDetailArray = [];
     for (const key in stateTimeEntry) {
         let object = {
-            [key]: stateTimeEntry[key]
-        }
+            [key]: stateTimeEntry[key],
+        };
         timeEntriesDetailArray.push(object);
     }
     sortDateArray(timeEntriesDetailArray, value);
-}
+};
 
 timeEntriesObjectForm = (array) => {
     let staeName = localStorage.getItem("stateName");
     $(defaultHtmlElemnts.detailedTableBody).empty();
     $(defaultHtmlElemnts.detailedPageNoData).empty();
-    $('table tr:eq(0) th:eq(0)').text("Date");
+    $("table tr:eq(0) th:eq(0)").text("Date");
     for (let index = 0; index < array.length; index++) {
         const element = array[index];
         for (const key in element) {
             let timeEntryObject = timeEntryDetailObject[staeName].dates[key];
             let object = {
-                [key]: timeEntryObject
-            }
+                [key]: timeEntryObject,
+            };
             makeDetailedPageObject(object);
         }
     }
-}
+};
 
 sortingTimeEntriesDetails = () => {
     $(defaultHtmlElemnts.detailSortBy).click(function() {
@@ -279,20 +303,20 @@ sortingTimeEntriesDetails = () => {
             timeEntriesDetailArraySorting(sortValue);
             let sortedArray = arraySortingBasedOnType(sortType, sortedDateArray);
             timeEntriesObjectForm(sortedArray);
-            return
+            return;
         }
-    })
-}
+    });
+};
 
 nextSlides = (thisId) => {
     // let varient = $(".state-container").attr("state");
     $(".next").click(function() {
-        let attribute = $(this).attr("state")
+        let attribute = $(this).attr("state");
         console.log("attribute---------->", attribute);
         let idSplit = attribute.split("-");
-        let totalVisible = $(`#varient-Total-${idSplit[1]}`).is(':visible');
-        let deltaVisible = $(`#varient-Delta-${idSplit[1]}`).is(':visible');
-        let delta7Visible = $(`#varient-Delta7-${idSplit[1]}`).is(':visible');
+        let totalVisible = $(`#varient-Total-${idSplit[1]}`).is(":visible");
+        let deltaVisible = $(`#varient-Delta-${idSplit[1]}`).is(":visible");
+        let delta7Visible = $(`#varient-Delta7-${idSplit[1]}`).is(":visible");
         console.log("totalVisible----------->", totalVisible);
         console.log("deltaVisible----------->", deltaVisible);
         console.log("delta7Visible----------->", delta7Visible);
@@ -310,17 +334,16 @@ nextSlides = (thisId) => {
             $(`#varient-Delta-${idSplit[1]}`).hide();
         }
     });
-
-}
+};
 
 sortDateArray = (array, value) => {
     sortedDateArray = [];
     console.log(array.length);
     array.forEach(function(elem, idx, arr) {
-        let firstKey = Object.keys(elem).find(keys => keys);
+        let firstKey = Object.keys(elem).find((keys) => keys);
         let object = {
-            [firstKey]: elem[firstKey].total[value] ? elem[firstKey].total[value] : 0
-        }
+            [firstKey]: elem[firstKey].total[value] ? elem[firstKey].total[value] : 0,
+        };
         sortedDateArray.push(object);
     });
-}
+};
