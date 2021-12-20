@@ -46,7 +46,8 @@ buildSurveyDetailsPlaceholder = (object) => {
             </div>
         </div>`;
 
-        return $(defaultHtmlElements.renderSurveyDetails).append(display);
+        $(defaultHtmlElements.renderSurveyDetails).append(display);
+        return
     }
 }
 
@@ -120,7 +121,8 @@ renderDistrictDetails = (state) => {
 
     const districts = surveyDetailObject[state].districts;
     let options = generateOptions(districts);
-    return $(defaultHtmlElements.detailDistrict).append(options);
+    $(defaultHtmlElements.detailDistrict).append(options);
+    return
 }
 
 renderPagination = (paginationLength) => {
@@ -129,7 +131,8 @@ renderPagination = (paginationLength) => {
     for (let index = 0; index < paginationLength; index++) {
         display += `<a  class="pageValue" value="${index + 1}">${index + 1}</a>`
     }
-    return $(defaultHtmlElements.renderPaginationDetails).append(display);
+    $(defaultHtmlElements.renderPaginationDetails).append(display);
+    return
 }
 
 renderNoData = () => {
@@ -137,7 +140,8 @@ renderNoData = () => {
     $(defaultHtmlElements.renderSurveyDetails).empty();
     $(defaultHtmlElements.renderPaginationDetails).empty();
     let display = `<div class="render-message"><span >No data Found</span></div>`;
-    return $(defaultHtmlElements.renderSurveyDetails).append(display);
+    $(defaultHtmlElements.renderSurveyDetails).append(display);
+    return
 }
 
 makeDetailedPageObject = (object) => {
@@ -160,10 +164,12 @@ makeDetailedPageObject = (object) => {
                         Deceased:${detailedPageObject.delta7.deceased}
                     </td>
                 </tr>`;
-        return $(defaultHtmlElements.detailedTableBody).append(display);
+        $(defaultHtmlElements.detailedTableBody).append(display);
+        return
     } else {
         $("table").hide();
-        return $(defaultHtmlElements.detailedPageNoData).append(`<span>No Data Found</span>`);
+        $(defaultHtmlElements.detailedPageNoData).append(`<span>No Data Found</span>`);
+        return
     }
 }
 
