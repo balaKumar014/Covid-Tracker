@@ -197,6 +197,7 @@ dateFormat = (date) => {
     return formatDate[0] + "-" + formatDate[1] + "-" + formatDate[2];
 }
 
+
 generateSurvayValues = (object) => {
     let detailObject = {
         confirmed: object.confirmed ? object.confirmed : 0,
