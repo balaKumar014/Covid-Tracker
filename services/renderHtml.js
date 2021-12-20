@@ -1,4 +1,4 @@
-let defaultHtmlElemnts = {
+let defaultHtmlElements = {
     districtSearchBoxDetail: ".district-search-input",
     renderSurveyDetails: "#render_survey_details",
     detailedDateBoxDetail: "#detailed_date_box",
@@ -20,20 +20,23 @@ let defaultHtmlElemnts = {
 }
 
 assignPagination = (array) => {
+
     let surveyDetailsLength = array.length;
-    let data = Math.round(surveyDetailsLength / 10);
-    renderpagination(data);
+    let pageLength = Math.round(surveyDetailsLength / 10);
+    return renderPagination(pageLength);
 }
 
 buildSurveyDetailsPlaceholder = (object) => {
     for (const key in object) {
         const districtptions = generateOptions(object[key].districts);
-        let display = `<div class="state-details-container" state="${key}">
+
+        let display =
+            `<div class="state-details-container" state="${key}">
             <div class="flex align-item-center justify-between">
                 <h2>${key}</h2>
                 <select class="input-box district-search-input" placeholder="Select a District">
                     <option>Select a District</option>
-                                ${districtptions}
+                    ${districtptions}
                 </select>
             </div>
             <div class="rows" id=${key}></div> 
@@ -41,12 +44,14 @@ buildSurveyDetailsPlaceholder = (object) => {
                 <a href="./pages/detailPage.html" target="_blank" class="detail-page"><button>
                 Details</button></a>
             </div>
-        </div>`
-        $(defaultHtmlElemnts.renderSurveyDetails).append(display);
+        </div>`;
+
+        return $(defaultHtmlElements.renderSurveyDetails).append(display);
     }
 }
 
 renderStateAndDistrictDetails = (element) => {
+
     for (const key in element) {
         $(`#${key}`).empty();
         const totalSurveyValues = element[key].total ? element[key].total : {};
@@ -55,20 +60,24 @@ renderStateAndDistrictDetails = (element) => {
         const totalSurveyDeatils = generateSurvayValues(totalSurveyValues);
         const deltaSurveyDeatils = generateSurvayValues(deltaSurveyValues);
         const delta7SurveyDeatils = generateSurvayValues(delta7SurveyValues);
+
         let display = `<div class="slideshow-container">
                             ${renderSurveyHtml(key, "Total", totalSurveyDeatils)}
                             ${renderSurveyHtml(key, "Delta", deltaSurveyDeatils)}
                             ${renderSurveyHtml(key, "Delta7", delta7SurveyDeatils)}
                             <a class="next" state="state-${key}">&#10095;</a>
-                        </div><br>`;
+                        </div>
+                        <br>`;
         $(`#${key}`).append(display);
         $(`#varient-Delta-${key}`).hide();
         $(`#varient-Delta7-${key}`).hide();
     }
+    return
 }
 
 renderSurveyHtml = (state, heading, object) => {
-    let html = ` <div class="slide">
+
+    let display = ` <div class="slide">
                     <div class="state-container"id="varient-${heading}-${state}" state="${state}">
                         <div>
                             <h3 class="text-center">${heading}</h3>
@@ -94,11 +103,12 @@ renderSurveyHtml = (state, heading, object) => {
                         </div>
                     </div>
                 </div>`;
-    return html;
+    return display;
 
 }
 
 generateOptions = (districts) => {
+
     let options = "";
     for (const key in districts) {
         options += `<option value="${key}">${key}</option>`
@@ -107,27 +117,31 @@ generateOptions = (districts) => {
 }
 
 renderDistrictDetails = (state) => {
+
     const districts = surveyDetailObject[state].districts;
     let options = generateOptions(districts);
-    $(defaultHtmlElemnts.detailDistrict).append(options);
+    return $(defaultHtmlElements.detailDistrict).append(options);
 }
 
-renderpagination = (paginationLength) => {
-    let html = "";
+renderPagination = (paginationLength) => {
+
+    let display = "";
     for (let index = 0; index < paginationLength; index++) {
-        html += `<a  class="pageValue" value="${index + 1}">${index + 1}</a>`
+        display += `<a  class="pageValue" value="${index + 1}">${index + 1}</a>`
     }
-    $(defaultHtmlElemnts.renderPaginationDetails).append(html);
+    return $(defaultHtmlElements.renderPaginationDetails).append(display);
 }
 
 renderNoData = () => {
-    $(defaultHtmlElemnts.renderSurveyDetails).empty();
-    $(defaultHtmlElemnts.renderPaginationDetails).empty();
-    let html = `<div class="render-message"><span >No data Found</span></div>`;
-    $(defaultHtmlElemnts.renderSurveyDetails).append(html);
+
+    $(defaultHtmlElements.renderSurveyDetails).empty();
+    $(defaultHtmlElements.renderPaginationDetails).empty();
+    let display = `<div class="render-message"><span >No data Found</span></div>`;
+    return $(defaultHtmlElements.renderSurveyDetails).append(display);
 }
 
 makeDetailedPageObject = (object) => {
+
     let detailedPageObject = prepareDetailedObject(object);
     if (detailedPageObject.status) {
         let display = `<tr>
@@ -146,14 +160,15 @@ makeDetailedPageObject = (object) => {
                         Deceased:${detailedPageObject.delta7.deceased}
                     </td>
                 </tr>`;
-        $(defaultHtmlElemnts.detailedTableBody).append(display);
+        return $(defaultHtmlElements.detailedTableBody).append(display);
     } else {
         $("table").hide();
-        $(defaultHtmlElemnts.detailedPageNoData).append(`<span>No Data Found</span>`);
+        return $(defaultHtmlElements.detailedPageNoData).append(`<span>No Data Found</span>`);
     }
 }
 
 prepareDetailedObject = (object) => {
+
     let requiredObject = {
         date: "",
         total: {},
@@ -163,34 +178,19 @@ prepareDetailedObject = (object) => {
     for (const key in object) {
         requiredObject["date"] = key;
         if (!object[key].delta) {
-            requiredObject.delta["confirmed"] = 0;
-            requiredObject.delta["deceased"] = 0;
-            requiredObject.delta["recovered"] = 0;
+            varientNotIncluded(requiredObject, "delta");
         } else {
-            requiredObject["status"] = true;
-            requiredObject.delta["confirmed"] = object[key].delta.confirmed ? object[key].delta.confirmed : 0;
-            requiredObject.delta["deceased"] = object[key].delta.deceased ? object[key].delta.deceased : 0;
-            requiredObject.delta["recovered"] = object[key].delta.recovered ? object[key].delta.recovered : 0;
+            varientIncluded(requiredObject, "delta", object, key);
         }
         if (!object[key].delta7) {
-            requiredObject.delta7["confirmed"] = 0;
-            requiredObject.delta7["deceased"] = 0;
-            requiredObject.delta7["recovered"] = 0;
+            varientNotIncluded(requiredObject, "delta7");
         } else {
-            requiredObject["status"] = true;
-            requiredObject.delta7["confirmed"] = object[key].delta7.confirmed ? object[key].delta7.confirmed : 0;
-            requiredObject.delta7["deceased"] = object[key].delta7.deceased ? object[key].delta7.deceased : 0;
-            requiredObject.delta7["recovered"] = object[key].delta7.recovered ? object[key].delta7.recovered : 0;
+            varientIncluded(requiredObject, "delta7", object, key);
         }
         if (!object[key].total) {
-            requiredObject.total["confirmed"] = 0;
-            requiredObject.total["deceased"] = 0;
-            requiredObject.total["recovered"] = 0;
+            varientNotIncluded(requiredObject, "total");
         } else {
-            requiredObject["status"] = true;
-            requiredObject.total["confirmed"] = object[key].total.confirmed ? object[key].total.confirmed : 0;
-            requiredObject.total["deceased"] = object[key].total.deceased ? object[key].total.deceased : 0;
-            requiredObject.total["recovered"] = object[key].total.recovered ? object[key].total.recovered : 0;
+            varientIncluded(requiredObject, "total", object, key);
         }
         if (!object[key].delta && !object[key].delta7 && !object[key].total) {
             requiredObject = {
@@ -199,4 +199,21 @@ prepareDetailedObject = (object) => {
         }
     }
     return requiredObject;
+}
+
+varientNotIncluded = (object, type) => {
+
+    object[type]["confirmed"] = 0;
+    object[type]["deceased"] = 0;
+    object[type]["recovered"] = 0;
+    return object;
+}
+
+varientIncluded = (requiredObject, type, defaultObject, key) => {
+
+    requiredObject["status"] = true;
+    requiredObject[type]["confirmed"] = defaultObject[key][type].confirmed ? defaultObject[key][type].confirmed : 0;
+    requiredObject[type]["deceased"] = defaultObject[key][type].deceased ? defaultObject[key][type].deceased : 0;
+    requiredObject[type]["recovered"] = defaultObject[key][type].recovered ? defaultObject[key][type].recovered : 0;
+    return requiredObject
 }

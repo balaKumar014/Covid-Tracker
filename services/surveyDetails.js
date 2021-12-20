@@ -6,17 +6,18 @@ let currentStateName = "";
 let timeEntriesDetailArray = [];
 let sortedDateArray = [];
 
-handleSurveyDetails = async(surveyUrl, timeEntriesurl) => {
-    let surveyDeatils = await getSurveyDetails(surveyUrl);
-    let surveyDetailsArray = constructArray(surveyDeatils);
+handleSurveyDetails = async(surveyUrl, timeEntriesUrl) => {
+    let surveyDetails = await getSurveyDetails(surveyUrl);
+    let surveyDetailsArray = constructArray(surveyDetails);
+    surveyDetailArray = surveyDetailsArray;
     $(this).addClass("active-page");
-    await getTimeEntriesDetails(timeEntriesurl);
+    await getTimeEntriesDetails(timeEntriesUrl);
     renderSurveyDetails(0, 10, surveyDetailsArray);
     assignPagination(surveyDetailsArray);
     renderPaginatedValues();
     searchByStateName();
-    searchByDistrict(defaultHtmlElemnts.districtSearchBoxDetail);
-    searchByDate(defaultHtmlElemnts.dateBoxDetail, "surveyDetail");
+    searchByDistrict(defaultHtmlElements.districtSearchBoxDetail);
+    searchByDate(defaultHtmlElements.dateBoxDetail, "surveyDetail");
     sortingSurveyDetails();
     renderStateDetails();
     nextSlides();
@@ -24,6 +25,7 @@ handleSurveyDetails = async(surveyUrl, timeEntriesurl) => {
 };
 
 getSurveyDetails = async(url) => {
+
     const surveyData = await getData(url);
     const surveyJsonData = await surveyData.json();
     surveyDetailObject = surveyJsonData;
@@ -31,6 +33,7 @@ getSurveyDetails = async(url) => {
 };
 
 getTimeEntriesDetails = async(url) => {
+
     const timeEntryData = await getData(url);
     const timeEntryJsonData = await timeEntryData.json();
     timeEntryDetailObject = timeEntryJsonData;
@@ -38,6 +41,7 @@ getTimeEntriesDetails = async(url) => {
 };
 
 constructArray = (details) => {
+
     const array = [];
     for (const key in details) {
         let object = {
@@ -45,29 +49,27 @@ constructArray = (details) => {
         };
         array.push(object);
     }
-    surveyDetailArray = array;
     return array;
 };
 
 renderSurveyDetails = (requiredIndex, requiredLength, array) => {
-    $(defaultHtmlElemnts.renderSurveyDetails).empty();
+
+    $(defaultHtmlElements.renderSurveyDetails).empty();
     for (let index = requiredIndex; index < requiredLength; index++) {
         const element = array[index];
         buildSurveyDetailsPlaceholder(element);
         renderStateAndDistrictDetails(element);
-        searchByDistrict(defaultHtmlElemnts.districtSearchBoxDetail);
-        searchByDate(defaultHtmlElemnts.dateBoxDetail, "surveyDetail");
+        searchByDistrict(defaultHtmlElements.districtSearchBoxDetail);
+        searchByDate(defaultHtmlElements.dateBoxDetail, "surveyDetail");
         renderStateDetails();
     }
     return;
 };
 
 renderPaginatedValues = () => {
-    $(`${defaultHtmlElemnts.paginatedButtons}`).click(function() {
-        console.log("clicked");
 
-        $(defaultHtmlElemnts.paginatedButtons).removeClass("active-page");
-        // $(this).closest(".active-page").attr(class);
+    $(`${defaultHtmlElements.paginatedButtons}`).click(function() {
+        $(defaultHtmlElements.paginatedButtons).removeClass("active-page");
         $(this).addClass("active-page");
         const paginationValue = $(this).attr("value") + "0";
         const requiredIndex = paginationValue - 10;
@@ -78,11 +80,11 @@ renderPaginatedValues = () => {
 };
 
 searchByStateName = () => {
-    $(`${defaultHtmlElemnts.searchBoxDetail}`).change(function() {
+
+    $(`${defaultHtmlElements.searchBoxDetail}`).change(function() {
         let objectLength = Object.keys(surveyDetailObject).length;
         let currentValue = this.value;
         currentValue = currentValue.toUpperCase();
-        console.log("currentValue0-------------->", currentValue);
         for (const [index, [key, value]] of Object.entries(
                 Object.entries(surveyDetailObject)
             )) {
@@ -90,8 +92,8 @@ searchByStateName = () => {
                 let object = {
                     [key]: value,
                 };
-                $(defaultHtmlElemnts.renderSurveyDetails).empty();
-                $(defaultHtmlElemnts.renderPaginationDetails).empty();
+                $(defaultHtmlElements.renderSurveyDetails).empty();
+                $(defaultHtmlElements.renderPaginationDetails).empty();
                 buildSurveyDetailsPlaceholder(object);
                 renderStateAndDistrictDetails(object);
                 nextSlides();
@@ -113,29 +115,28 @@ searchByStateName = () => {
 };
 
 renderStateDetails = () => {
-    $(defaultHtmlElemnts.detailPage).click(function() {
-        let stateName = $(this)
-            .closest("div.state-details-container")
-            .attr("state");
-        localStorage.setItem("stateName", stateName);
-        return;
+
+    $(defaultHtmlElements.detailPage).click(function() {
+        let stateName = $(this).closest("div.state-details-container").attr("state");
+        return localStorage.setItem("stateName", stateName);
     });
 };
 
 initiateDetailRender = (currentStateName) => {
+
     let timeEntries = timeEntryDetailObject[currentStateName].dates;
     $("#state_name").empty();
     $("#state_name").append(`<span >${currentStateName}</span>`);
     for (const key in timeEntries) {
-        console.log("key---------->", key);
         let prepareObject = {};
         prepareObject[key] = timeEntries[key];
-        makeDetailedPageObject(prepareObject, "");
+        makeDetailedPageObject(prepareObject);
     }
     return;
 };
 
 searchByDistrict = (element, state) => {
+
     $(element).change(function() {
         if (!state) {
             let response = "";
@@ -159,13 +160,13 @@ searchByDistrict = (element, state) => {
                     [this.value]: response,
                 };
                 $("table").show();
-                $(defaultHtmlElemnts.detailedTableBody).empty();
-                $(defaultHtmlElemnts.detailedPageNoData).empty();
+                $(defaultHtmlElements.detailedTableBody).empty();
+                $(defaultHtmlElements.detailedPageNoData).empty();
                 $("table tr:eq(0) th:eq(0)").text("District");
                 makeDetailedPageObject(object);
             } else {
                 $("table tr:eq(0) th:eq(0)").text("Date");
-                $(defaultHtmlElemnts.detailedTableBody).empty();
+                $(defaultHtmlElements.detailedTableBody).empty();
                 initiateDetailRender(stateName);
             }
         }
@@ -173,6 +174,7 @@ searchByDistrict = (element, state) => {
 };
 
 searchByDate = (element, type) => {
+
     $(element).change(function() {
         let date = dateFormat(this.value);
         if (type == "surveyDetail") {
@@ -193,20 +195,20 @@ searchByDate = (element, type) => {
             }
         }
         if (type == "fullDetail") {
-            let staeName = localStorage.getItem("stateName");
+            let stateName = localStorage.getItem("stateName");
             if (date != "-undefined-undefined") {
-                let value = timeEntryDetailObject[staeName].dates[date];
+                let value = timeEntryDetailObject[stateName].dates[date];
                 let object = {
                     [date]: value ? value : {},
                 };
                 $("table").show();
-                $(defaultHtmlElemnts.detailedTableBody).empty();
-                $(defaultHtmlElemnts.detailedPageNoData).empty();
+                $(defaultHtmlElements.detailedTableBody).empty();
+                $(defaultHtmlElements.detailedPageNoData).empty();
                 $("table tr:eq(0) th:eq(0)").text("Date");
                 makeDetailedPageObject(object);
             } else {
-                $(defaultHtmlElemnts.detailedTableBody).empty();
-                initiateDetailRender(staeName);
+                $(defaultHtmlElements.detailedTableBody).empty();
+                initiateDetailRender(stateName);
             }
         }
         return;
@@ -214,11 +216,13 @@ searchByDate = (element, type) => {
 };
 
 dateFormat = (date) => {
+
     let formatDate = date.split("-");
     return formatDate[0] + "-" + formatDate[1] + "-" + formatDate[2];
 };
 
 generateSurvayValues = (object) => {
+
     let detailObject = {
         confirmed: object.confirmed ? object.confirmed : 0,
         recovered: object.recovered ? object.recovered : 0,
@@ -231,22 +235,22 @@ generateSurvayValues = (object) => {
 };
 
 sortingSurveyDetails = () => {
-    $(defaultHtmlElemnts.sortBy).click(function() {
-        const sortType = $(defaultHtmlElemnts.sortType).val();
-        const sortValue = $(defaultHtmlElemnts.sortValue).val();
+
+    $(defaultHtmlElements.sortBy).click(function() {
+        const sortType = $(defaultHtmlElements.sortType).val();
+        const sortValue = $(defaultHtmlElements.sortValue).val();
         if (sortType !== "Select Sort Type" && sortValue !== "Select Sort Value") {
             surveyDetailArraySorting(surveyDetailArray, sortValue);
-            let sortedArray = arraySortingBasedOnType(
-                sortType,
-                sortedSurveyDetailArray
-            );
+            const sortedArray = arraySortingBasedOnType(sortType, sortedSurveyDetailArray);
             renderSurveyDetails(0, 9, sortedArray);
             nextSlides();
         }
+        return;
     });
 };
 
 arraySortingBasedOnType = (sortType, array) => {
+
     let detail = "";
     if (sortType == "Ascending") {
         detail = array;
@@ -257,15 +261,17 @@ arraySortingBasedOnType = (sortType, array) => {
 };
 
 surveyDetailArraySorting = (array, key) => {
+
     sortedSurveyDetailArray = array;
     sortedSurveyDetailArray.sort(function(a, b) {
-        let firstKey = Object.keys(a).find((keys) => keys);
-        let secondKey = Object.keys(b).find((keys) => keys);
+        const firstKey = Object.keys(a).find((keys) => keys);
+        const secondKey = Object.keys(b).find((keys) => keys);
         return a[firstKey].total[key] - b[secondKey].total[key];
     });
 };
 
 timeEntriesDetailArraySorting = (value) => {
+
     let staeName = localStorage.getItem("stateName");
     let stateTimeEntry = timeEntryDetailObject[staeName].dates;
     timeEntriesDetailArray = [];
@@ -275,13 +281,14 @@ timeEntriesDetailArraySorting = (value) => {
         };
         timeEntriesDetailArray.push(object);
     }
-    sortDateArray(timeEntriesDetailArray, value);
+    return sortDateArray(timeEntriesDetailArray, value);
 };
 
 timeEntriesObjectForm = (array) => {
+
     let staeName = localStorage.getItem("stateName");
-    $(defaultHtmlElemnts.detailedTableBody).empty();
-    $(defaultHtmlElemnts.detailedPageNoData).empty();
+    $(defaultHtmlElements.detailedTableBody).empty();
+    $(defaultHtmlElements.detailedPageNoData).empty();
     $("table tr:eq(0) th:eq(0)").text("Date");
     for (let index = 0; index < array.length; index++) {
         const element = array[index];
@@ -291,14 +298,16 @@ timeEntriesObjectForm = (array) => {
                 [key]: timeEntryObject,
             };
             makeDetailedPageObject(object);
-        }
-    }
+        };
+    };
+    return;
 };
 
 sortingTimeEntriesDetails = () => {
-    $(defaultHtmlElemnts.detailSortBy).click(function() {
-        const sortType = $(defaultHtmlElemnts.detailSortType).val();
-        const sortValue = $(defaultHtmlElemnts.detailSortValue).val();
+
+    $(defaultHtmlElements.detailSortBy).click(function() {
+        const sortType = $(defaultHtmlElements.detailSortType).val();
+        const sortValue = $(defaultHtmlElements.detailSortValue).val();
         if (sortType !== "Select Sort Type" && sortValue !== "Select Sort Value") {
             timeEntriesDetailArraySorting(sortValue);
             let sortedArray = arraySortingBasedOnType(sortType, sortedDateArray);
@@ -308,18 +317,14 @@ sortingTimeEntriesDetails = () => {
     });
 };
 
-nextSlides = (thisId) => {
-    // let varient = $(".state-container").attr("state");
+nextSlides = () => {
+
     $(".next").click(function() {
         let attribute = $(this).attr("state");
-        console.log("attribute---------->", attribute);
         let idSplit = attribute.split("-");
         let totalVisible = $(`#varient-Total-${idSplit[1]}`).is(":visible");
         let deltaVisible = $(`#varient-Delta-${idSplit[1]}`).is(":visible");
         let delta7Visible = $(`#varient-Delta7-${idSplit[1]}`).is(":visible");
-        console.log("totalVisible----------->", totalVisible);
-        console.log("deltaVisible----------->", deltaVisible);
-        console.log("delta7Visible----------->", delta7Visible);
         if (totalVisible) {
             $(`#varient-Delta-${idSplit[1]}`).show();
             $(`#varient-Total-${idSplit[1]}`).hide();
@@ -333,17 +338,20 @@ nextSlides = (thisId) => {
             $(`#varient-Delta7-${idSplit[1]}`).hide();
             $(`#varient-Delta-${idSplit[1]}`).hide();
         }
+        return;
     });
 };
 
+
 sortDateArray = (array, value) => {
+
     sortedDateArray = [];
-    console.log(array.length);
-    array.forEach(function(elem, idx, arr) {
-        let firstKey = Object.keys(elem).find((keys) => keys);
+    array.forEach(function(element) {
+        let firstKey = Object.keys(element).find((keys) => keys);
         let object = {
-            [firstKey]: elem[firstKey].total[value] ? elem[firstKey].total[value] : 0,
+            [firstKey]: element[firstKey].total[value] ? element[firstKey].total[value] : 0,
         };
         sortedDateArray.push(object);
     });
+    return;
 };

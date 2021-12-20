@@ -8,12 +8,7 @@
     <title>Detail Page</title>
     <link rel="stylesheet" href="../style//detailPage.css">
     <link rel="stylesheet" href="../style/surveyDetails.css">
-    <link rel="stylesheet" href="../style/main.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-    <script src="../proxies/covidSurvey.js"></script>
-    <script src="../detailPage.js"></script>
-    <script src="../services/renderHtml.js"></script>
-    <script src="../services/surveyDeatils.js"></script>
+    <link rel="stylesheet" href="../style/index.css">
 </head>
 
 <body>
@@ -33,18 +28,17 @@
             <div>
                 <select id="detail_sort_value">
                     <option>Select Sort Value</option>
-                    <option value="confirmed">Confirmed count </option>
+                    <option value="confirmed">Confirmed Count </option>
                     <option value="deceased">Affected Percentage</option>
-                    <option value="vaccinated1">Vaccinated1 percentage</option>
-                    <option value="vaccinated2">Vaccinated2 percentage</option>
+                    <option value="vaccinated1">Vaccinated 1 Percentage</option>
+                    <option value="vaccinated2">Vaccinated 2 Percentage</option>
                 </select>
                 <select id="detail_sort_type">
                     <option>Select Sort Type</option>
                     <option>Ascending</option>
                     <option>Descending</option>
                 </select>
-                <button id="detailed_sort_by">Sort By</button>
-                <!-- <input type="button" value="Sort By" class="input-box" > -->
+                <button id="detailed_sort_by">Sort</button>
             </div>
         </div>
 
@@ -52,25 +46,29 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="employee-sno">Date</th>
-                        <th class="employee-id">Confirmed</th>
-                        <th class="employee-name">Recovered</th>
-                        <th class="employee-email">Deceased</th>
-                        <th class="employee-email">Delta</th>
-                        <th class="employee-email">Delta7</th>
+                        <th>Date</th>
+                        <th>Confirmed</th>
+                        <th>Recovered</th>
+                        <th>Deceased</th>
+                        <th>Delta</th>
+                        <th>Delta7</th>
                     </tr>
                 </thead>
                 <tbody id="detailed_table_body" class="" statee="test">
                 </tbody>
             </table>
-            <div id="render_no_data" class="render-survey-details flex align-item-center flex-wrap justify-center render-message">
-
-            </div>
+            <div id="render_no_data" class="render-survey-details flex align-item-center flex-wrap justify-center render-message"></div>
         </div>
-
         <div class="render-survey-details flex align-item-center flex-wrap justify-center" id="detailed_render_survey_details">
         </div>
     </div>
+
 </body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="../proxy/covidSurvey.js"></script>
+<script src="../services/detailPage.js"></script>
+<script src="../services/renderHtml.js"></script>
+<script src="../services/surveyDetails.js"></script>
 
 </html>
